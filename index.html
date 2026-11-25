@@ -222,6 +222,12 @@ const CONFIG = {
   freeDailyLimit: 10,
   freeMaxMB: 25
 };
+const paramsPago = new URLSearchParams(window.location.search);
+if (paramsPago.get('plan') === 'pro' || paramsPago.get('plan') === 'premium') {
+  localStorage.setItem('user_plan', paramsPago.get('plan'));
+  window.history.replaceState({}, document.title, window.location.pathname);
+  alert('¡Gracias! Tu plan ' + paramsPago.get('plan').toUpperCase() + ' ya está activo.');
+}
 
   const CONFIG = {
   contactEmail: "quintanamaximo514@gmail.com",
