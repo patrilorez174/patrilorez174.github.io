@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>convertiX – Convierte archivos en segundos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f7fc;--surface:#fff;--ink:#14172b;--muted:#5b6078;--line:#e1e4f0;--brand:#3d5afe;--brand-ink:#fff;--accent:#ff5c5c;--ok:#12a36a;
+--display:'Bricolage Grotesque','Trebuchet MS',system-ui,sans-serif;--body:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1020;--surface:#171a31;--ink:#eef0ff;--muted:#a3a8c7;--line:#2a2e4d;--brand:#7a8cff;--brand-ink:#0e1020;--accent:#ff7a7a;--ok:#3fd69a}}
+:root[data-theme="dark"]{--bg:#0e1020;--surface:#171a31;--ink:#eef0ff;--muted:#a3a8c7;--line:#2a2e4d;--brand:#7a8cff;--brand-ink:#0e1020;--accent:#ff7a7a;--ok:#3fd69a}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.6 var(--body);-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--brand);outline-offset:3px;border-radius:6px}
+.wrap{width:min(1120px,100% - 2.5rem);margin-inline:auto}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:64px;gap:1rem}
+.logo{font:800 1.6rem/1 var(--display);text-decoration:none;letter-spacing:-.03em}
+.logo b{color:var(--accent);font-weight:800}
+.nav ul{display:flex;gap:1.6rem;list-style:none;margin:0;padding:0}
+.nav ul a{text-decoration:none;color:var(--muted);font-weight:500}
+.nav ul a:hover{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;border:1.5px solid var(--ink);background:transparent;color:var(--ink);font:700 1rem var(--body);padding:.75rem 1.3rem;border-radius:12px;cursor:pointer;text-decoration:none;transition:transform .15s,background .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+.btn.block{width:100%}
+h1,h2,h3{font-family:var(--display);letter-spacing:-.03em;line-height:1.05;margin:0}
+.hero{padding:clamp(2.5rem,7vw,5.5rem) 0}
+.hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(2rem,5vw,4rem);align-items:center}
+h1{font-size:clamp(2.6rem,6.4vw,4.9rem);font-weight:800}
+.hero p.lead{font-size:1.2rem;color:var(--muted);max-width:34ch;margin:1.3rem 0 1.6rem}
+.trust{display:flex;flex-wrap:wrap;gap:.5rem 1.2rem;color:var(--muted);font-size:.95rem;margin:0;padding:0;list-style:none}
+.trust li::before{content:"✓ ";color:var(--ok);font-weight:700}
+.tool{background:var(--surface);border:1.5px solid var(--ink);border-radius:22px;padding:1.4rem;box-shadow:8px 8px 0 var(--brand)}
+.drop{border:2px dashed var(--line);border-radius:16px;padding:2rem 1rem;text-align:center;cursor:pointer;transition:border-color .2s,background .2s}
+.drop.over,.drop:hover{border-color:var(--brand);background:color-mix(in srgb,var(--brand) 8%,transparent)}
+.drop strong{display:block;font:800 1.2rem var(--display)}
+.drop small{color:var(--muted)}
+.row{display:flex;align-items:center;gap:.7rem;margin:1.1rem 0}
+.chip{flex:1;border:1.5px solid var(--line);border-radius:12px;padding:.7rem .9rem;background:var(--bg);font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+select.chip{font-family:var(--body);font-size:1rem;color:var(--ink)}
+.arrow{font-size:1.4rem;color:var(--accent);font-weight:800}
+.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:1rem;display:none}
+.bar i{display:block;height:100%;width:0;background:var(--ok);transition:width .25s}
+#status{min-height:1.5em;margin:.8rem 0 0;font-size:.95rem;color:var(--muted)}
+#status.err{color:var(--accent);font-weight:500}
+#status a{color:var(--brand);font-weight:700}
+section{padding:clamp(3rem,7vw,5.5rem) 0}
+h2{font-size:clamp(2rem,4.6vw,3.2rem);font-weight:800;max-width:18ch}
+.sub{color:var(--muted);max-width:50ch;margin:.9rem 0 2.2rem}
+.formats{display:flex;flex-wrap:wrap;gap:.6rem}
+.formats span{border:1.5px solid var(--line);background:var(--surface);border-radius:99px;padding:.35rem .9rem;font-weight:700;font-size:.95rem}
+.formats span:nth-child(3n+1){border-color:var(--brand)}
+.formats span:nth-child(3n+2){border-color:var(--accent)}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;align-items:stretch}
+.plan{background:var(--surface);border:1.5px solid var(--line);border-radius:22px;padding:1.8rem;display:flex;flex-direction:column;position:relative}
+.plan.pop{border:2px solid var(--ink);box-shadow:8px 8px 0 var(--accent)}
+.tag{position:absolute;top:-14px;right:20px;background:var(--accent);color:#14172b;font-weight:700;font-size:.85rem;padding:.25rem .8rem;border-radius:99px}
+.plan h3{font-size:1.6rem}
+.price{font:800 3.2rem/1 var(--display);letter-spacing:-.04em;margin:.8rem 0 .2rem}
+.price small{font:500 1rem var(--body);color:var(--muted);letter-spacing:0}
+.plan p.d{color:var(--muted);margin:0 0 1.2rem;font-size:.98rem}
+.plan ul{list-style:none;padding:0;margin:0 0 1.6rem;flex:1}
+.plan li{padding:.4rem 0 .4rem 1.6rem;position:relative;font-size:.98rem}
+.plan li::before{content:"✓";position:absolute;left:0;color:var(--ok);font-weight:800}
+.plan li.no{color:var(--muted)}
+.plan li.no::before{content:"–";color:var(--muted)}
+details{border-bottom:1px solid var(--line);padding:1rem 0;max-width:760px}
+summary{cursor:pointer;font:700 1.15rem var(--display);list-style:none;display:flex;justify-content:space-between;gap:1rem}
+summary::after{content:"+";color:var(--brand);font-size:1.4rem;line-height:1}
+details[open] summary::after{content:"–"}
+details p{color:var(--muted);margin:.7rem 0 0}
+.contact{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,5vw,4rem)}
+form{display:grid;gap:.9rem}
+label{font-weight:700;font-size:.95rem;display:grid;gap:.35rem}
+input,textarea{font:inherit;color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:.75rem .9rem;width:100%}
+textarea{min-height:120px;resize:vertical}
+footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--muted);font-size:.95rem}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);transform:translate(-50%,30px);background:var(--ink);color:var(--bg);padding:.8rem 1.2rem;border-radius:12px;opacity:0;pointer-events:none;transition:.25s;max-width:min(92vw,420px);text-align:center;z-index:20}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media (max-width:900px){.hero .wrap,.contact{grid-template-columns:1fr}.plans{grid-template-columns:1fr;max-width:480px}.nav ul{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#top">convert<b>iX</b></a>
+    <ul><li><a href="#formatos">Formatos</a></li><li><a href="#planes">Planes</a></li><li><a href="#faq">Preguntas</a></li><li><a href="#contacto">Contacto</a></li></ul>
+    <a class="btn primary" href="#planes">Ver planes</a>
+  </div>
+</header>
+
+<main id="top">
+<div class="hero"><div class="wrap">
+  <div>
+    <h1>Cambia el formato. Conserva todo lo demás.</h1>
+    <p class="lead">Convierte documentos, imágenes, audio y video desde cualquier dispositivo, sin instalar nada.</p>
+    <ul class="trust"><li>Sin registro para empezar</li><li>Archivos borrados automáticamente</li><li>Funciona en móvil y PC</li></ul>
+  </div>
+  <div class="tool" id="convertir">
+    <div class="drop" id="drop" tabindex="0" role="button" aria-label="Elegir archivo">
+      <strong id="dropTitle">Suelta tu archivo aquí</strong>
+      <small id="dropHint">o toca para elegirlo · hasta 25 MB gratis</small>
+      <input type="file" id="file" hidden>
+    </div>
+    <div class="row">
+      <div class="chip" id="fromChip">Origen</div>
+      <span class="arrow" aria-hidden="true">→</span>
+      <select class="chip" id="to" aria-label="Convertir a" disabled><option>Destino</option></select>
+    </div>
+    <button class="btn primary block" id="go" type="button">Convertir ahora</button>
+    <div class="bar" id="bar"><i></i></div>
+    <p id="status" role="status" aria-live="polite"></p>
+  </div>
+</div></div>
+
+<section id="formatos"><div class="wrap">
+  <h2>Más de 100 formatos, un solo lugar</h2>
+  <p class="sub">Desde un PDF para el trabajo hasta un audio para tu celular. Elige el destino y listo.</p>
+  <div class="formats" id="chips"></div>
+</div></section>
+
+<section id="planes"><div class="wrap">
+  <h2>Elige cuánto quieres convertir</h2>
+  <p class="sub">Empieza gratis. Cambia de plan o cancela cuando quieras.</p>
+  <div class="plans">
+    <article class="plan">
+      <h3>Gratis</h3>
+      <div class="price">$0<small> /mes</small></div>
+      <p class="d">Para conversiones ocasionales.</p>
+      <ul>
+        <li>10 conversiones por día</li>
+        <li>Archivos de hasta 25 MB</li>
+        <li>Formatos básicos (PDF, DOCX, JPG, PNG, MP3)</li>
+        <li>Velocidad estándar</li>
+        <li>Archivos borrados tras 1 hora</li>
+        <li class="no">Con publicidad</li>
+        <li class="no">Sin conversión por lotes</li>
+      </ul>
+      <a class="btn block" href="#convertir">Empezar gratis</a>
+    </article>
+    <article class="plan pop">
+      <span class="tag">Más elegido</span>
+      <h3>Pro</h3>
+      <div class="price">$5<small> /mes</small></div>
+      <p class="d">Para uso diario sin límites molestos.</p>
+      <ul>
+        <li>200 conversiones por día</li>
+        <li>Archivos de hasta 200 MB</li>
+        <li>Más de 40 formatos</li>
+        <li>Lotes de hasta 10 archivos</li>
+        <li>Sin publicidad</li>
+        <li>Velocidad prioritaria</li>
+        <li>Historial de 7 días</li>
+      </ul>
+      <button class="btn primary block" type="button" data-plan="pro">Elegir Pro</button>
+    </article>
+    <article class="plan">
+      <h3>Premium</h3>
+      <div class="price">$20<small> /mes</small></div>
+      <p class="d">Para equipos y trabajo profesional.</p>
+      <ul>
+        <li>Conversiones ilimitadas</li>
+        <li>Archivos de hasta 2 GB</li>
+        <li>Más de 100 formatos</li>
+        <li>Lotes de hasta 100 archivos</li>
+        <li>OCR: texto editable desde escaneos</li>
+        <li>Acceso por API y Google Drive</li>
+        <li>Soporte en menos de 24 h</li>
+      </ul>
+      <button class="btn block" type="button" data-plan="premium">Elegir Premium</button>
+    </article>
+  </div>
+</div></section>
+
+<section id="faq"><div class="wrap">
+  <h2>Preguntas frecuentes</h2>
+  <div style="margin-top:2rem">
+    <details><summary>¿Qué pasa con mis archivos?</summary><p>Se procesan en nuestros servidores y se eliminan automáticamente: tras 1 hora en el plan gratis y según tu historial en los planes de pago.</p></details>
+    <details><summary>¿Puedo cancelar cuando quiera?</summary><p>Sí. Cancelas desde tu cuenta y conservas el plan hasta que termine el período ya pagado.</p></details>
+    <details><summary>¿Funciona en el celular?</summary><p>Sí. convertiX se adapta a móviles, tablets y computadoras, y no necesitas instalar nada.</p></details>
+    <details><summary>¿Qué medios de pago aceptan?</summary><p>Tarjetas de crédito y débito, y otros métodos según tu país.</p></details>
+  </div>
+</div></section>
+
+<section id="contacto"><div class="wrap contact">
+  <div>
+    <h2>¿Dudas? Escríbenos</h2>
+    <p class="sub">Te respondemos por correo. Los planes de pago tienen prioridad.</p>
+  </div>
+  <form id="contactForm">
+    <label>Nombre<input name="name" required autocomplete="name"></label>
+    <label>Correo<input name="email" type="email" required autocomplete="email"></label>
+    <label>Mensaje<textarea name="message" required></textarea></label>
+    <button class="btn primary" type="submit">Enviar mensaje</button>
+  </form>
+</div></section>
+</main>
+
+<footer><div class="wrap"><span>© <span id="yr"></span> convertiX</span><span><a href="#">Términos</a> · <a href="#">Privacidad</a></span></div></footer>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ============ CONFIGURACIÓN: edita solo este bloque ============ */
+const CONFIG = {
+  contactEmail: "quintanamaximo514@gmail.com",
+  contactEndpoint: "",
+  checkout: {
+    pro: "",
+    premium: ""
+  },
+  convertEndpoint: "http://localhost:3000/api/convert",
+  freeDailyLimit: 10,
+  freeMaxMB: 25
+};
+
+
+/* ================================================================= */
+
+const $ = id => document.getElementById(id);
+const MAP = {
+  pdf:["docx","txt","jpg","png"], doc:["pdf","txt"], docx:["pdf","txt"], txt:["pdf","docx"],
+  jpg:["png","webp","pdf"], jpeg:["png","webp","pdf"], png:["jpg","webp","pdf"], webp:["jpg","png"],
+  heic:["jpg","png"], mp3:["wav","ogg","m4a"], wav:["mp3","ogg"], m4a:["mp3","wav"],
+  mp4:["mp3","gif","webm"], mov:["mp4","gif"], xlsx:["csv","pdf"], csv:["xlsx","pdf"]
+};
+const ALL = ["PDF","DOCX","XLSX","PPTX","TXT","JPG","PNG","WEBP","HEIC","SVG","MP3","WAV","M4A","OGG","MP4","MOV","GIF","WEBM","EPUB","CSV"];
+$("chips").innerHTML = ALL.map(f=>"<span>"+f+"</span>").join("")+"<span>y más…</span>";
+$("yr").textContent = new Date().getFullYear();
+
+let current = null;
+function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("show"),3500)}
+function status(msg,err){const s=$("status");s.className=err?"err":"";s.innerHTML=msg}
+
+const drop=$("drop"), input=$("file");
+drop.addEventListener("click",()=>input.click());
+drop.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();input.click()}});
+["dragenter","dragover"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add("over")}));
+["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove("over")}));
+drop.addEventListener("drop",e=>setFile(e.dataTransfer.files[0]));
+input.addEventListener("change",()=>setFile(input.files[0]));
+
+function setFile(f){
+  if(!f) return;
+  if(f.size > CONFIG.freeMaxMB*1048576){
+    status("Este archivo supera "+CONFIG.freeMaxMB+" MB. <a href='#planes'>Pasa a Pro o Premium</a> para archivos más grandes.",true);return;
+  }
+  current=f;
+  const ext=(f.name.split(".").pop()||"").toLowerCase();
+  $("dropTitle").textContent=f.name;
+  $("dropHint").textContent=(f.size/1048576).toFixed(2)+" MB";
+  $("fromChip").textContent=ext.toUpperCase();
+  const opts=MAP[ext];
+  const sel=$("to");
+  if(!opts){sel.innerHTML="<option>Sin conversión disponible</option>";sel.disabled=true;status("Ese formato aún no está disponible en el plan gratis.",true);return}
+  sel.innerHTML=opts.map(o=>"<option value='"+o+"'>"+o.toUpperCase()+"</option>").join("");
+  sel.disabled=false;status("");
+}
+
+function usedToday(){try{const d=JSON.parse(localStorage.getItem("cx_use")||"{}");return d.day===new Date().toDateString()?d.n:0}catch(e){return 0}}
+function addUse(){try{localStorage.setItem("cx_use",JSON.stringify({day:new Date().toDateString(),n:usedToday()+1}))}catch(e){}}
+
+$("go").addEventListener("click",async()=>{
+  if(!current){status("Primero elige un archivo.",true);return}
+  if($("to").disabled){return}
+  if(usedToday()>=CONFIG.freeDailyLimit){status("Llegaste al límite diario gratis. <a href='#planes'>Mira los planes</a> para seguir.",true);return}
+  const bar=$("bar"),fill=bar.firstElementChild;bar.style.display="block";fill.style.width="10%";status("Convirtiendo…");
+  try{
+    if(CONFIG.convertEndpoint){
+      const fd=new FormData();fd.append("file",current);fd.append("to",$("to").value);
+      const r=await fetch(CONFIG.convertEndpoint,{method:"POST",body:fd});
+      if(!r.ok) throw new Error("fallo");
+      const j=await r.json();fill.style.width="100%";addUse();
+      status("Listo. <a href='"+j.url+"' download>Descargar archivo</a>");
+    }else{
+      // Modo demostración: simula el avance hasta que conectes tu servidor de conversión
+      for(let p=30;p<=100;p+=35){await new Promise(r=>setTimeout(r,450));fill.style.width=p+"%"}
+      addUse();status("Modo demostración: conecta tu servidor en CONFIG.convertEndpoint para descargar el archivo real.");
+    }
+  }catch(e){status("No pudimos convertir el archivo. Inténtalo otra vez.",true);fill.style.width="0"}
+});
+
+document.querySelectorAll("[data-plan]").forEach(b=>b.addEventListener("click",()=>{
+  const url=CONFIG.checkout[b.dataset.plan];
+  if(url){window.location.href=url}else{toast("Pega tu link de pago en CONFIG.checkout para activar este botón.")}
+}));
+
+$("contactForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const f=e.target,d=Object.fromEntries(new FormData(f));
+  if(CONFIG.contactEndpoint){
+    try{
+      const r=await fetch(CONFIG.contactEndpoint,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify(d)});
+      if(!r.ok) throw new Error("fallo");
+      f.reset();toast("Mensaje enviado. Te respondemos pronto.");
+    }catch(err){toast("No se pudo enviar. Inténtalo otra vez.")}
+  }else{
+    const body=encodeURIComponent(d.message+"\n\n— "+d.name+" ("+d.email+")");
+    window.location.href="mailto:"+CONFIG.contactEmail+"?subject="+encodeURIComponent("Consulta desde convertiX")+"&body="+body;
+  }
+});
+</script>
+</body>
+</html>
